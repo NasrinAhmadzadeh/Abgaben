@@ -3,26 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CU_DB.DataManager
 {
-    public class DiagnosseDataManager
+    public class DiagnoseDataManager
     {
-        
-
-        string conStr = @"Data Source=.\SQLEXPRESS;Initial Catalog=CU;Integrated Security = true";
-
-        // Transportieren
-        public void InsertDataToDb(string filepath)
+        string conStr= System.Configuration.ConfigurationManager.ConnectionStrings["DiagnoseDB"].ConnectionString;
+        /// <summary>
+        /// Insert Daten in DB
+        /// </summary>
+        /// <param name="filepath"></param>
+        public void InsertDataToDb(List<Diagnose> diagnossesList)
         {
-            FileManager f = new FileManager();
-
-            var records = f.ReadLogFile(filepath);
-
             using (SqlConnection conn = new SqlConnection(conStr))
             {
                 conn.Open();
@@ -108,7 +100,6 @@ namespace CU_DB.DataManager
                         "XDDisconnectReason," +
                         "XDDisconnectDate," +
                         "XDDeliveryGroup) " +
-
 
                         " VALUES (@StressLevel," +
                         "@ID," +
@@ -274,103 +265,88 @@ namespace CU_DB.DataManager
                 cmd.Parameters.Add("@XDDisconnectDate", DbType.String);
                 cmd.Parameters.Add("@XDDeliveryGroup", DbType.String);
 
-
-
-
-
-
-
-
-                foreach (var item in records)
+                foreach (var diagnose in diagnossesList)
                 {
-                   
-
-
-                    cmd.Parameters[0].Value = item.StressLevel.HasValue ? item.StressLevel.Value : (object)DBNull.Value;
-                    cmd.Parameters[1].Value = item.ID.HasValue ? item.ID.Value : (object)DBNull.Value;
-                    cmd.Parameters[2].Value = item.SessionName;
-                    cmd.Parameters[3].Value = item.User;
-                    cmd.Parameters[4].Value = item.CitrixReceiverVersion;
-                    cmd.Parameters[5].Value = item.State;
-                    cmd.Parameters[6].Value = item.ConnectTime.HasValue ? item.ConnectTime.Value : (object)DBNull.Value;
-                    cmd.Parameters[7].Value = item.DisconnectTime.HasValue ? item.DisconnectTime.Value : (object)DBNull.Value;
-                    cmd.Parameters[8].Value = item.IdleTime.HasValue ? item.IdleTime.Value : (object)DBNull.Value;
-                    cmd.Parameters[9].Value = item.IdleTimeMin.HasValue ? item.IdleTimeMin.Value : (object)DBNull.Value;
-                    cmd.Parameters[10].Value = item.LogonTime.HasValue ? item.LogonTime.Value : (object)DBNull.Value;
-                    cmd.Parameters[11].Value = item.Processes.HasValue ? item.Processes.Value : (object)DBNull.Value;
-                    cmd.Parameters[12].Value = item.LatencyLast.HasValue ? item.LatencyLast.Value : (object)DBNull.Value;
-                    cmd.Parameters[13].Value = item.BandwidthLast.HasValue ? item.BandwidthLast.Value : (object)DBNull.Value;
-                    cmd.Parameters[14].Value = item.RTT.HasValue ? item.RTT.Value : (object)DBNull.Value;
-                    cmd.Parameters[15].Value = item.BandwidthAvg.HasValue ? item.BandwidthAvg.Value : (object)DBNull.Value;
-                    cmd.Parameters[16].Value = item.BandwidthLimit.HasValue ? item.BandwidthLimit.Value : (object)DBNull.Value;
-                    cmd.Parameters[17].Value = item.LatencyAvg.HasValue ? item.LatencyAvg.Value : (object)DBNull.Value;
-                    cmd.Parameters[18].Value = item.ClientIP.HasValue ? item.ClientIP.Value : (object)DBNull.Value;
-                    cmd.Parameters[19].Value = item.BranchName;
-                    cmd.Parameters[20].Value = item.ClientName;
-                    cmd.Parameters[21].Value = item.Computer;
-                    cmd.Parameters[22].Value = item.DomainDNS;
-                    cmd.Parameters[23].Value = item.InitialProgram;
-                    cmd.Parameters[24].Value = item.CPU;
-                    cmd.Parameters[25].Value = item.PageFaultsSec.HasValue ? item.PageFaultsSec.Value : (object)DBNull.Value;
-                    cmd.Parameters[26].Value = item.IOReadOperationsSec.HasValue ? item.IOReadOperationsSec.Value : (object)DBNull.Value;
-                    cmd.Parameters[27].Value = item.IOWriteOperationSec.HasValue ? item.IOWriteOperationSec.Value : (object)DBNull.Value;
-                    cmd.Parameters[28].Value = item.MemoryPrivateBytes.HasValue ? item.MemoryPrivateBytes.Value : (object)DBNull.Value;
-                    cmd.Parameters[29].Value = item.MemoryWorkingSet;
-                    cmd.Parameters[30].Value = item.ViewClientConnectionServerURL;
-                    cmd.Parameters[31].Value = item.ViewClientDomain;
-                    cmd.Parameters[32].Value = item.ViewClientProtocol;
-                    cmd.Parameters[33].Value = item.ViewClientType;
-                    cmd.Parameters[34].Value = item.ViewClientTunnel;
-                    cmd.Parameters[35].Value = item.UserLogenServer;
-                    cmd.Parameters[36].Value = item.GroupPolicyLoadTime;
-                    cmd.Parameters[37].Value = item.ProfileLoadTime.HasValue ? item.ProfileLoadTime.Value : (object)DBNull.Value;
-                    cmd.Parameters[38].Value = item.logonDurationOther.HasValue ? item.logonDurationOther.Value : (object)DBNull.Value;
-                    cmd.Parameters[39].Value = item.DesktopLoadTime.HasValue ? item.DesktopLoadTime.Value : (object)DBNull.Value;
-                    cmd.Parameters[40].Value = item.XDLogonDuration;
-                    cmd.Parameters[41].Value = item.SessionCreateTime.HasValue ? item.SessionCreateTime.Value : (object)DBNull.Value;
-                    cmd.Parameters[42].Value = item.UserADDN;
-                    cmd.Parameters[43].Value = item.UserADOU;
-                    cmd.Parameters[44].Value = item.UserFullName;
-                    cmd.Parameters[45].Value = item.AvgAppLoadTime.HasValue ? item.AvgAppLoadTime.Value : (object)DBNull.Value;
-                    cmd.Parameters[46].Value = item.GPUCPUUtilization;
-                    cmd.Parameters[47].Value = item.GPUFrameBufferMemryUtilization.HasValue ? item.GPUFrameBufferMemryUtilization.Value : (object)DBNull.Value;
-                    cmd.Parameters[48].Value = item.GPUencoderUtilization.HasValue ? item.GPUencoderUtilization.Value : (object)DBNull.Value;
-                    cmd.Parameters[49].Value = item.GPUdecoderUtilization.HasValue ? item.GPUdecoderUtilization.Value : (object)DBNull.Value;
-                    cmd.Parameters[50].Value = item.XDSiteName.HasValue ? item.XDSiteName.Value : (object)DBNull.Value;
-                    cmd.Parameters[51].Value = item.XDSessionCreateTime.HasValue ? item.XDSessionCreateTime.Value : (object)DBNull.Value;
-                    cmd.Parameters[52].Value = item.XDLogonDuration;
-                    cmd.Parameters[53].Value = item.XDPublishedResourceType;
-                    cmd.Parameters[54].Value = item.XDAnonymous;
-                    cmd.Parameters[55].Value = item.XDConnectedViaHostName;
-                    cmd.Parameters[56].Value = item.XDConnectedViaIPAddress;
-                    cmd.Parameters[57].Value = item.XDLaunchedViaHostName;
-                    cmd.Parameters[58].Value = item.XDLaunchedViaIPAddress;
-                    cmd.Parameters[59].Value = item.XDSessionReconnected;
-                    cmd.Parameters[60].Value = item.XDSecureICASession;
-                    cmd.Parameters[61].Value = item.Protocol;
-                    cmd.Parameters[62].Value = item.XDBrokeringDuration;
-                    cmd.Parameters[63].Value = item.XDBrokeringDate;
-                    cmd.Parameters[64].Value = item.XDVMStartDuration;
-                    cmd.Parameters[65].Value = item.XDClientSessionValidateDate;
-                    cmd.Parameters[66].Value = item.XDServerSessionValidateDate;
-                    cmd.Parameters[67].Value = item.XDEstablishmentDate;
-                    cmd.Parameters[68].Value = item.XDHDXConnectionLoadTime;
-                    cmd.Parameters[69].Value = item.XDAuthenticationDuration;
-                    cmd.Parameters[70].Value = item.XDGroupPolicyLoadTime;
-                    cmd.Parameters[71].Value = item.XDLogonScriptsLoadTime;
-                    cmd.Parameters[72].Value = item.XDProfileLoadTime;
-                    cmd.Parameters[73].Value = item.XDInteractiveSessionLoadTime;
-                    cmd.Parameters[74].Value = item.XDUPN;
-                    cmd.Parameters[75].Value = item.XDAppsInUse;
-                    cmd.Parameters[76].Value = item.XDAppsInUseCount;
-                    cmd.Parameters[77].Value = item.XDDisconnectReason;
-                    cmd.Parameters[78].Value = item.XDDisconnectDate;
-                    cmd.Parameters[79].Value = item.XDDeliveryGroup;
-
-
-
-
-
+                    cmd.Parameters[0].Value = diagnose.StressLevel.HasValue ? diagnose.StressLevel.Value : (object)DBNull.Value;
+                    cmd.Parameters[1].Value = diagnose.ID.HasValue ? diagnose.ID.Value : (object)DBNull.Value;
+                    cmd.Parameters[2].Value = diagnose.SessionName;
+                    cmd.Parameters[3].Value = diagnose.User;
+                    cmd.Parameters[4].Value = diagnose.CitrixReceiverVersion;
+                    cmd.Parameters[5].Value = diagnose.State;
+                    cmd.Parameters[6].Value = diagnose.ConnectTime.HasValue ? diagnose.ConnectTime.Value : (object)DBNull.Value;
+                    cmd.Parameters[7].Value = diagnose.DisconnectTime.HasValue ? diagnose.DisconnectTime.Value : (object)DBNull.Value;
+                    cmd.Parameters[8].Value = diagnose.IdleTime.HasValue ? diagnose.IdleTime.Value : (object)DBNull.Value;
+                    cmd.Parameters[9].Value = diagnose.IdleTimeMin.HasValue ? diagnose.IdleTimeMin.Value : (object)DBNull.Value;
+                    cmd.Parameters[10].Value = diagnose.LogonTime.HasValue ? diagnose.LogonTime.Value : (object)DBNull.Value;
+                    cmd.Parameters[11].Value = diagnose.Processes.HasValue ? diagnose.Processes.Value : (object)DBNull.Value;
+                    cmd.Parameters[12].Value = diagnose.LatencyLast.HasValue ? diagnose.LatencyLast.Value : (object)DBNull.Value;
+                    cmd.Parameters[13].Value = diagnose.BandwidthLast.HasValue ? diagnose.BandwidthLast.Value : (object)DBNull.Value;
+                    cmd.Parameters[14].Value = diagnose.RTT.HasValue ? diagnose.RTT.Value : (object)DBNull.Value;
+                    cmd.Parameters[15].Value = diagnose.BandwidthAvg.HasValue ? diagnose.BandwidthAvg.Value : (object)DBNull.Value;
+                    cmd.Parameters[16].Value = diagnose.BandwidthLimit.HasValue ? diagnose.BandwidthLimit.Value : (object)DBNull.Value;
+                    cmd.Parameters[17].Value = diagnose.LatencyAvg.HasValue ? diagnose.LatencyAvg.Value : (object)DBNull.Value;
+                    cmd.Parameters[18].Value = diagnose.ClientIP.HasValue ? diagnose.ClientIP.Value : (object)DBNull.Value;
+                    cmd.Parameters[19].Value = diagnose.BranchName;
+                    cmd.Parameters[20].Value = diagnose.ClientName;
+                    cmd.Parameters[21].Value = diagnose.Computer;
+                    cmd.Parameters[22].Value = diagnose.DomainDNS;
+                    cmd.Parameters[23].Value = diagnose.InitialProgram;
+                    cmd.Parameters[24].Value = diagnose.CPU;
+                    cmd.Parameters[25].Value = diagnose.PageFaultsSec.HasValue ? diagnose.PageFaultsSec.Value : (object)DBNull.Value;
+                    cmd.Parameters[26].Value = diagnose.IOReadOperationsSec.HasValue ? diagnose.IOReadOperationsSec.Value : (object)DBNull.Value;
+                    cmd.Parameters[27].Value = diagnose.IOWriteOperationSec.HasValue ? diagnose.IOWriteOperationSec.Value : (object)DBNull.Value;
+                    cmd.Parameters[28].Value = diagnose.MemoryPrivateBytes.HasValue ? diagnose.MemoryPrivateBytes.Value : (object)DBNull.Value;
+                    cmd.Parameters[29].Value = diagnose.MemoryWorkingSet;
+                    cmd.Parameters[30].Value = diagnose.ViewClientConnectionServerURL;
+                    cmd.Parameters[31].Value = diagnose.ViewClientDomain;
+                    cmd.Parameters[32].Value = diagnose.ViewClientProtocol;
+                    cmd.Parameters[33].Value = diagnose.ViewClientType;
+                    cmd.Parameters[34].Value = diagnose.ViewClientTunnel;
+                    cmd.Parameters[35].Value = diagnose.UserLogenServer;
+                    cmd.Parameters[36].Value = diagnose.GroupPolicyLoadTime;
+                    cmd.Parameters[37].Value = diagnose.ProfileLoadTime.HasValue ? diagnose.ProfileLoadTime.Value : (object)DBNull.Value;
+                    cmd.Parameters[38].Value = diagnose.logonDurationOther.HasValue ? diagnose.logonDurationOther.Value : (object)DBNull.Value;
+                    cmd.Parameters[39].Value = diagnose.DesktopLoadTime.HasValue ? diagnose.DesktopLoadTime.Value : (object)DBNull.Value;
+                    cmd.Parameters[40].Value = diagnose.XDLogonDuration;
+                    cmd.Parameters[41].Value = diagnose.SessionCreateTime.HasValue ? diagnose.SessionCreateTime.Value : (object)DBNull.Value;
+                    cmd.Parameters[42].Value = diagnose.UserADDN;
+                    cmd.Parameters[43].Value = diagnose.UserADOU;
+                    cmd.Parameters[44].Value = diagnose.UserFullName;
+                    cmd.Parameters[45].Value = diagnose.AvgAppLoadTime.HasValue ? diagnose.AvgAppLoadTime.Value : (object)DBNull.Value;
+                    cmd.Parameters[46].Value = diagnose.GPUCPUUtilization;
+                    cmd.Parameters[47].Value = diagnose.GPUFrameBufferMemryUtilization.HasValue ? diagnose.GPUFrameBufferMemryUtilization.Value : (object)DBNull.Value;
+                    cmd.Parameters[48].Value = diagnose.GPUencoderUtilization.HasValue ? diagnose.GPUencoderUtilization.Value : (object)DBNull.Value;
+                    cmd.Parameters[49].Value = diagnose.GPUdecoderUtilization.HasValue ? diagnose.GPUdecoderUtilization.Value : (object)DBNull.Value;
+                    cmd.Parameters[50].Value = diagnose.XDSiteName.HasValue ? diagnose.XDSiteName.Value : (object)DBNull.Value;
+                    cmd.Parameters[51].Value = diagnose.XDSessionCreateTime.HasValue ? diagnose.XDSessionCreateTime.Value : (object)DBNull.Value;
+                    cmd.Parameters[52].Value = diagnose.XDLogonDuration;
+                    cmd.Parameters[53].Value = diagnose.XDPublishedResourceType;
+                    cmd.Parameters[54].Value = diagnose.XDAnonymous;
+                    cmd.Parameters[55].Value = diagnose.XDConnectedViaHostName;
+                    cmd.Parameters[56].Value = diagnose.XDConnectedViaIPAddress;
+                    cmd.Parameters[57].Value = diagnose.XDLaunchedViaHostName;
+                    cmd.Parameters[58].Value = diagnose.XDLaunchedViaIPAddress;
+                    cmd.Parameters[59].Value = diagnose.XDSessionReconnected;
+                    cmd.Parameters[60].Value = diagnose.XDSecureICASession;
+                    cmd.Parameters[61].Value = diagnose.Protocol;
+                    cmd.Parameters[62].Value = diagnose.XDBrokeringDuration;
+                    cmd.Parameters[63].Value = diagnose.XDBrokeringDate;
+                    cmd.Parameters[64].Value = diagnose.XDVMStartDuration;
+                    cmd.Parameters[65].Value = diagnose.XDClientSessionValidateDate;
+                    cmd.Parameters[66].Value = diagnose.XDServerSessionValidateDate;
+                    cmd.Parameters[67].Value = diagnose.XDEstablishmentDate;
+                    cmd.Parameters[68].Value = diagnose.XDHDXConnectionLoadTime;
+                    cmd.Parameters[69].Value = diagnose.XDAuthenticationDuration;
+                    cmd.Parameters[70].Value = diagnose.XDGroupPolicyLoadTime;
+                    cmd.Parameters[71].Value = diagnose.XDLogonScriptsLoadTime;
+                    cmd.Parameters[72].Value = diagnose.XDProfileLoadTime;
+                    cmd.Parameters[73].Value = diagnose.XDInteractiveSessionLoadTime;
+                    cmd.Parameters[74].Value = diagnose.XDUPN;
+                    cmd.Parameters[75].Value = diagnose.XDAppsInUse;
+                    cmd.Parameters[76].Value = diagnose.XDAppsInUseCount;
+                    cmd.Parameters[77].Value = diagnose.XDDisconnectReason;
+                    cmd.Parameters[78].Value = diagnose.XDDisconnectDate;
+                    cmd.Parameters[79].Value = diagnose.XDDeliveryGroup;
 
                     cmd.ExecuteNonQuery();
                 }
@@ -384,9 +360,9 @@ namespace CU_DB.DataManager
 
 }
 
-        
 
-    
+
+
 
 
 

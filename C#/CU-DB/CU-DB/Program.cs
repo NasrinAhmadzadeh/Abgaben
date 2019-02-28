@@ -15,23 +15,11 @@ namespace CU_DB
     {
         static void Main(string[] args)
         {
-            var diagnossDataManager = new DiagnosseDataManager();
-
             Console.WriteLine("Enter your Directory Path:");
             var path = Console.ReadLine();
-
-
-            //var dt = diagnossDataManager.GetDataTableFromCsv(path);
-            //diagnossDataManager.InsertDataIntoSql(dt);4
-
             FileManager fileManager = new FileManager();
             fileManager.InsertFromFolder(path);
-
             Console.ReadKey();
-           
-
-
-
         }
     }
 }

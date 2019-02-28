@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CU_DB.DataTypes
 {
-    public class Diagnosse
+    public class Diagnose
     {
         public double? StressLevel { get; set; }
         public double? ID { get; set; }

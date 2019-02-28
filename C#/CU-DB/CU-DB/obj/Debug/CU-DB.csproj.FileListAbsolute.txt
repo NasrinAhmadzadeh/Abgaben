@@ -12,3 +12,9 @@ C:\Projects\LösungsAufgaben\C#\CU-DB\CU-DB\obj\Debug\CU-DB.csprojAssemblyRefere
 C:\Projects\LösungsAufgaben\C#\CU-DB\CU-DB\obj\Debug\CU-DB.csproj.CoreCompileInputs.cache
 C:\Projects\LösungsAufgaben\C#\CU-DB\CU-DB\obj\Debug\CU-DB.exe
 C:\Projects\LösungsAufgaben\C#\CU-DB\CU-DB\obj\Debug\CU-DB.pdb
+C:\Projects\Abgaben\C#\CU-DB\CU-DB\bin\Debug\CU-DB.exe.config
+C:\Projects\Abgaben\C#\CU-DB\CU-DB\bin\Debug\CU-DB.exe
+C:\Projects\Abgaben\C#\CU-DB\CU-DB\bin\Debug\CU-DB.pdb
+C:\Projects\Abgaben\C#\CU-DB\CU-DB\obj\Debug\CU-DB.csproj.CoreCompileInputs.cache
+C:\Projects\Abgaben\C#\CU-DB\CU-DB\obj\Debug\CU-DB.exe
+C:\Projects\Abgaben\C#\CU-DB\CU-DB\obj\Debug\CU-DB.pdb

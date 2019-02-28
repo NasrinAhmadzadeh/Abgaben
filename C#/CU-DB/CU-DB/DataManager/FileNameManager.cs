@@ -9,10 +9,17 @@ using System.Threading.Tasks;
 
 namespace CU_DB.DataManager
 {
+    /// <summary>
+    /// Die Klasse zum DateiManagement 
+    /// um das duplizierte Eintragen der Datei in DB zu vermeiden.
+    /// </summary>
     public class FileNameManager
     {
-
-        string conStr = @"Data Source=.\SQLEXPRESS;Initial Catalog=CU;Integrated Security = true";   
+        string conStr = System.Configuration.ConfigurationManager.ConnectionStrings["DiagnoseDB"].ConnectionString;
+        /// <summary>
+        /// insert der Name von Datei in DB
+        /// </summary>
+        /// <param name="fileName"></param>
         public void InsertFileName(string fileName)
         {
             using (SqlConnection openCon = new SqlConnection(conStr))
@@ -22,14 +29,17 @@ namespace CU_DB.DataManager
                 using (SqlCommand querySaveStaff = new SqlCommand(saveFileQuery))
                 {
                     querySaveStaff.Connection = openCon;
-
                     openCon.Open();
                     querySaveStaff.ExecuteNonQuery();
-
                 }
             }
         }
 
+        /// <summary>
+        /// überprüft, ob die Datei bereits in DB eingertragen wurde.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         public int CheckFileName(string fileName)
         {
             int count;

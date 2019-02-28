@@ -8,29 +8,27 @@ using System.Threading.Tasks;
 
 namespace CU_DB.DataManager
 {
+    /// <summary>
+    /// Klasse zum File-Management
+    /// </summary>
     public class FileManager
-    {
-
-
-        string conStr = @"Data Source=.\SQLEXPRESS;Initial Catalog=CU;Integrated Security = true";
-
-        //Read files...........
+    {       
+        /// <summary>
+        /// Insert die Dateien von Ordner in DB
+        /// </summary>
+        /// <param name="directoryPath"></param>
         public void InsertFromFolder(string directoryPath)
-
         {
             FileNameManager fileNameDataManager = new FileNameManager();
             foreach (string file in Directory.EnumerateFiles(directoryPath, "*.csv"))
             {
                 var fileName = Path.GetFileName(file);
-
-                //Überprüfen, ob die Datei bereits eingetragen ist 
                 int countFile = fileNameDataManager.CheckFileName(fileName);              
                 if (countFile < 1)
                 {
-                    DiagnosseDataManager diagnossDataManager = new DiagnosseDataManager();
-                    diagnossDataManager.InsertDataToDb(file);
-                    
-
+                    DiagnoseDataManager diagnossDataManager = new DiagnoseDataManager();
+                    var diagnosesList = ReadLogFile(file);
+                    diagnossDataManager.InsertDataToDb(diagnosesList);               
                     fileNameDataManager.InsertFileName(fileName);
                     Console.WriteLine("the File" + fileName + "is imported in DB ");
                 }
@@ -38,33 +36,28 @@ namespace CU_DB.DataManager
                 {
                     Console.WriteLine("the File" + fileName + "has already imported in DB ");
                 }
-
             }
         }
 
-        //lesen
-
-        public List<Diagnosse> ReadLogFile(string filepath)
+       
+        /// <summary>
+        /// Liest eine Datei und erstellt entsprechende Objekt für jede Zeile
+        /// </summary>
+        /// <param name="filepath"></param>
+        /// <returns>eine List von Diagnosse</returns>
+        private List<Diagnose> ReadLogFile(string filepath)
         {
-
             StreamReader sr = new StreamReader(filepath);
-
-
-
+            List<Diagnose> listDiagnoss = new List<Diagnose>();
             string line = sr.ReadLine();
-            line = sr.ReadLine();
-      
-            List<Diagnosse> listDiagnoss = new List<Diagnosse>();
-
+            line = sr.ReadLine();  
+            
             while (!sr.EndOfStream)
-            {
-                
+            {           
                 string[] seperator = { "\",\"" };
                 var columns = sr.ReadLine().Split(seperator, StringSplitOptions.None);
                 //object
-                var diagnoss = new Diagnosse();
-
-
+                var diagnoss = new Diagnose();
                 var strfirst = columns[0].Replace("\"", string.Empty);
                 diagnoss.StressLevel = String.IsNullOrEmpty(strfirst) ? (double?)null : double.Parse(strfirst);
                 diagnoss.ID = String.IsNullOrEmpty(columns[1]) ? (double?)null : double.Parse(columns[1]);
@@ -83,11 +76,8 @@ namespace CU_DB.DataManager
                 {
                     diagnoss.IdleTime = TimeSpan.Parse(columns[8]).Ticks;
                 }
-
-
                 diagnoss.IdleTimeMin = String.IsNullOrEmpty(columns[9]) ? (double?)null : double.Parse(columns[9]);
-                diagnoss.LogonTime = String.IsNullOrEmpty(columns[10]) ? (DateTime?)null : DateTime.Parse(columns[10]);
-                
+                diagnoss.LogonTime = String.IsNullOrEmpty(columns[10]) ? (DateTime?)null : DateTime.Parse(columns[10]);           
                 diagnoss.Processes = String.IsNullOrEmpty(columns[11]) ? (double?)null : float.Parse(columns[11]);
                 diagnoss.LatencyLast = String.IsNullOrEmpty(columns[12]) ? (double?)null : float.Parse(columns[12]);
                 diagnoss.BandwidthLast = String.IsNullOrEmpty(columns[13]) ? (double?)null : float.Parse(columns[13]);
@@ -156,16 +146,10 @@ namespace CU_DB.DataManager
                 diagnoss.XDAppsInUseCount = columns[76];
                 diagnoss.XDDisconnectReason = columns[77];
                 diagnoss.XDDisconnectDate = columns[78];
-                diagnoss.XDDeliveryGroup = columns[79].Replace("\"", string.Empty);
-                
-
-
+                diagnoss.XDDeliveryGroup = columns[79].Replace("\"", string.Empty);               
                 listDiagnoss.Add(diagnoss);
-
             }
             return listDiagnoss;
         }
-
-
     }
 }

@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,10 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataManager\DiagnosseDataManager.cs" />
+    <Compile Include="DataManager\DiagnoseDataManager.cs" />
     <Compile Include="DataManager\FileManager.cs" />
     <Compile Include="DataManager\FileNameManager.cs" />
-    <Compile Include="DataTypes\Diagnosse.cs" />
+    <Compile Include="DataTypes\Diagnose.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
